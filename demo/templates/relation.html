@@ -4,7 +4,39 @@
     <title></title>
     <meta charset="utf-8" />
     <script src="/static/js/echarts.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
 {#    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>#}
+<style>
+        .chart-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .chart-container .close-btn {
+            text-align: right;
+        }
+        .chart-container .close-btn button {
+            background: #ff4d4f;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .chart-container .close-btn button:hover {
+            background: #d9363e;
+        }
+</style>
 </head>
 <title>关系</title>
 <div class="container">
@@ -30,18 +62,16 @@
 			 		</div>
 			 		<!--dropdown combobox start-->
 					<label style="padding-left: 2%;">执行算法</label>
-			        <div class="btn-group" style="padding-left: 2%" > <a class="btn btn-default dropdown-toggle btn-select form-control" data-toggle="dropdown" id="btnCountry">Select a Relation <span class="caret"></span></a>
+			        <div class="btn-group" style="padding-left: 2%" > <a class="btn btn-default dropdown-toggle btn-select form-control" data-toggle="dropdown" id="btnCountry">Select a Algorithm<span class="caret"></span></a>
 			            <ul class="dropdown-menu">
-			                <li><a href="#">wentao tang</a></li>
-			                <li><a href="#">Country</a></li>
-			                <li><a href="#">Taxon rank</a></li>
-			                <li><a href="#">Subclass of</a></li>
-			                <li><a href="#">Has part</a></li>
-			                <li><a href="#">Parent Taxon</a></li>
-			                <li><a href="#">Sex or gender</a></li>
-			                <li><a href="#">Part of</a></li>
-			                <li><a href="#">Different from</a></li>
-			                <li><a href="#">Found in taxon</a></li>
+			                <li onclick="selectOption(1)"><a href="#">PCA</a></li>
+			                <li onclick="selectOption(2)"><a href="#">clustering</a></li>
+			                <li onclick="selectOption(3)"><a href="#">Decision Tree</a></li>
+			                <li onclick="selectOption(4)"><a href="#">Random Forest</a></li>
+			                <li onclick="selectOption(5)"><a href="#">SVM</a></li>
+			                <li onclick="selectOption(6)"><a href="#">Transformer</a></li>
+			                <li onclick="selectOption(7)"><a href="#">BERT</a></li>
+			                <li onclick="selectOption(8)"><a href="#">LSTM</a></li>
 			                <li class="divider"></li>
 			                <li><a href="#"><span class="glyphicon glyphicon-star"></span>Other</a></li>
 			            </ul>
@@ -72,6 +102,274 @@
     <button class="execute-command">⚡ 执行命令</button>
     <button class="clear-command">✖ 清空</button>
     <button class="delete-command">🗑 删除</button>
+
+	<script>
+ 
+ 		let selectedOption = 0;
+        let chart = null;
+
+		function selectOption(option) {
+			selectedOption = option;
+			document.getElementById('startexe').innerText = `开始执行`;
+		}
+
+		function randomClusterCenter() {
+            return {
+                x: Math.random() * 100 - 50,
+                y: Math.random() * 100 - 50,
+                z: Math.random() * 100 - 50
+            };
+        }
+
+        function generateClusterPoints(center, numPoints, spread) {
+            const points = [];
+            for (let i = 0; i < numPoints; i++) {
+                const point = [
+                    center.x + (Math.random() - 0.5) * spread,
+                    center.y + (Math.random() - 0.5) * spread,
+                    center.z + (Math.random() - 0.5) * spread
+                ];
+                points.push(point);
+            }
+            return points;
+        }
+
+        function generateNoisePoints(numPoints) {
+            const points = [];
+            for (let i = 0; i < numPoints; i++) {
+                const point = [
+                    Math.random() * 100 - 50,
+                    Math.random() * 100 - 50,
+                    Math.random() * 100 - 50
+                ];
+                points.push(point);
+            }
+            return points;
+        }
+
+        // 生成聚类数据
+        function generateClusterData(numClusters, pointsPerCluster, clusterSpread, noiseLevel) {
+            data = [];
+            outliers = [];
+
+            for (let i = 0; i < numClusters; i++) {
+                const center = randomClusterCenter();
+                const clusterPoints = generateClusterPoints(center, pointsPerCluster, clusterSpread);
+                data.push(...clusterPoints);
+            }
+
+            const noisePoints = generateNoisePoints(pointsPerCluster * numClusters * noiseLevel);
+            data.push(...noisePoints);
+
+            // 生成离群点
+            const numOutliers = 3; // 设定离群点数量
+            for (let i = 0; i < numOutliers; i++) {
+                const outlier = [
+                    Math.random() * 200 - 100,
+                    Math.random() * 200 - 100,
+                    Math.random() * 200 - 100
+                ];
+                outliers.push(outlier);
+            }
+
+            return { data, outliers };
+        }
+
+        function selectOption(option) {
+            selectedOption = option;
+            document.getElementById('startexe').innerText = `开始执行`;
+        }
+
+        function randomClusterCenter() {
+            return {
+                x: Math.random() * 100 - 50,
+                y: Math.random() * 100 - 50,
+                z: Math.random() * 100 - 50
+            };
+        }
+
+        function generateClusterPoints(center, numPoints, spread) {
+            const points = [];
+            for (let i = 0; i < numPoints; i++) {
+                const point = [
+                    center.x + (Math.random() - 0.5) * spread,
+                    center.y + (Math.random() - 0.5) * spread,
+                    center.z + (Math.random() - 0.5) * spread
+                ];
+                points.push(point);
+            }
+            return points;
+        }
+
+        function generateNoisePoints(numPoints) {
+            const points = [];
+            for (let i = 0; i < numPoints; i++) {
+                const point = [
+                    Math.random() * 100 - 50,
+                    Math.random() * 100 - 50,
+                    Math.random() * 100 - 50
+                ];
+                points.push(point);
+            }
+            return points;
+        }
+
+        // 生成聚类数据
+        function generateClusterData(numClusters, pointsPerCluster, clusterSpread, noiseLevel) {
+            const data = [];
+            const outliers = [];
+
+            for (let i = 0; i < numClusters; i++) {
+                const center = randomClusterCenter();
+                const clusterPoints = generateClusterPoints(center, pointsPerCluster, clusterSpread);
+                data.push(...clusterPoints);
+            }
+
+            const noisePoints = generateNoisePoints(pointsPerCluster * numClusters * noiseLevel);
+            data.push(...noisePoints);
+
+            // 生成离群点
+            const numOutliers = 3; // 设定离群点数量
+            for (let i = 0; i < numOutliers; i++) {
+                const outlier = [
+                    Math.random() * 200 - 100,
+                    Math.random() * 200 - 100,
+                    Math.random() * 200 - 100
+                ];
+                outliers.push(outlier);
+            }
+
+            return { data, outliers };
+        }
+
+        function showGraph() {
+            // 修改按钮文本
+            document.getElementById('startexe').innerText = `再次执行 (选项 ${selectedOption})`;
+
+            // 显示图表容器
+            const chartContainer = document.getElementById('chartContainer');
+            chartContainer.style.display = 'block';
+
+            // 销毁之前的图表实例
+            if (chart !== null) {
+                chart.dispose();
+            }
+
+            // 初始化ECharts实例
+            chart = echarts.init(document.getElementById('chart'));
+
+            if (selectedOption === 1) {
+                // 生成正态分布随机数
+                function randomNormal(mean, std) {
+                    var u = 0, v = 0;
+                    while (u === 0) u = Math.random();
+                    while (v === 0) v = Math.random();
+                    return mean + std * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+                }
+
+                // 生成随机散点数据
+                var a = 20; // 常数a
+                var data = [];
+                for (var i = 0; i < 200; i++) {
+                    var x = randomNormal(a / 2, a / 6); // 正态分布随机生成x
+                    x = Math.max(0, Math.min(a, x)); // 确保x在[0, a]范围内
+                    var y = a - x + randomNormal(0, a / 10); // 增加随机性
+                    y = Math.max(0, y); // 确保y在第一象限
+                    data.push([x, y]);
+                }
+
+                // 确定离群点（这里简单处理：超过一定范围的点为离群点）
+                var outliers = data.filter(point => point[0] < 2 || point[0] > a - 2 || point[1] < 2 || point[1] > a - 2);
+                var inliers = data.filter(point => !outliers.includes(point));
+
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: 'Scatter Plot on y = a - x Line',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    xAxis: {
+                        type: 'value'
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'Inliers',
+                            type: 'scatter',
+                            data: inliers,
+                            itemStyle: {
+                                color: 'green'
+                            }
+                        },
+
+                    ]
+                };
+
+                // 使用刚指定的配置项和数据显示图表
+                chart.setOption(option);
+            } else if (selectedOption === 2) {
+                // 生成模拟数据
+                const numClusters = 1;
+                const pointsPerCluster = 40;
+                const clusterSpread = 2;
+                const noiseLevel = 0.7;
+                const { data, outliers } = generateClusterData(numClusters, pointsPerCluster, clusterSpread, noiseLevel);
+
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: 'Test Data - t-SNE'
+                    },
+                    xAxis3D: {
+                        type: 'value'
+                    },
+                    yAxis3D: {
+                        type: 'value'
+                    },
+                    zAxis3D: {
+                        type: 'value'
+                    },
+                    grid3D: {
+                        viewControl: {
+                            // 3D视图控制
+                            projection: 'orthographic'
+                        }
+                    },
+                    series: [
+                        {
+                            type: 'scatter3D',
+                            data: data,
+                            symbolSize: 10,
+                            itemStyle: {
+                                opacity: 0.8
+                            }
+                        },
+                        {
+                            type: 'scatter3D',
+                            data: outliers,
+                            symbolSize: 10,
+                            itemStyle: {
+                                color: 'red',
+                                opacity: 0.8
+                            }
+                        }
+                    ]
+                };
+
+                // 使用刚指定的配置项和数据显示图表
+                chart.setOption(option);
+            }
+        }
+
+        function closeChart() {
+            document.getElementById('chartContainer').style.display = 'none';
+        }
+	</script>
     <table>
         <thead>
             <tr>
@@ -92,10 +390,10 @@
                 <td>ps -ef | grep "java"</td>
                 <td>ps -ef | grep "java"</td>
                 <td>admin</td>
-                <td><span class="status-completed">执行完成</span></td>
+                <td><span class="status-completed">上传完成</span></td>
                 <td>2024-06-01 16:39:50<br>持续时间: 10s</td>
                 <td>
-                    <a href="#" class="action-link">重新执行</a>
+                    <button  class="action-link" id="startexe" onclick="showGraph()">开始执行</button>
                     <a href="#" class="action-link">命令</a>
                     <a href="#" class="action-link">日志</a>
                     <a href="#" class="action-link">中断</a>
@@ -104,9 +402,14 @@
             </tr>
         </tbody>
     </table>
+	<div class="chart-container" id="chartContainer">
+        <div class="close-btn">
+            <button onclick="closeChart()">关闭</button>
+        </div>
+        <div id="chart" style="width: 100%; height: 400px;"></div>
+    </div>
 	</div>
-
-
+	
 	{% if ctx %}
 	<div class = "col-md-12">
 		<div class = "panel panel-default">
@@ -343,6 +646,7 @@
 	myChart.setOption(option);
 
 </script>
+
 {% endif %}
 <script>
 

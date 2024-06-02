@@ -6,6 +6,39 @@
     <meta charset="utf-8" />
     <script src="/static/js/echarts.js"></script>
 {#    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>#}
+<style>
+
+    /* 进度条样式 */
+    .progress-bar-container {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        max-width: 400px;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border-radius: 8px;
+    }
+    .progress-bar {
+        width: 100%;
+        background-color: #f3f3f3;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    .progress-bar-fill {
+        height: 20px;
+        width: 0;
+        background-color: #007bff;
+        border-radius: 20px;
+        text-align: center;
+        color: #fff;
+        line-height: 20px;
+        transition: width 0.5s;
+    }
+</style>
 </head>
 <title>实体</title>
 <div class="container">
@@ -17,9 +50,9 @@
                 <li><i class="fa fa-home"></i><a href="\">Home</a></li>
                 <li><i class="fa fa-share-alt" aria-hidden="true"></i>上传日志</li>
             </ol>
-    </div>
+        </div>
     <div class = "col-md-12">
-        <div class="upload_container" style="display: flex; flex-direction: row; gap: 100px;">
+        <div  style="display: flex; flex-direction: row; gap: 100px;">
             <div class="upload_sidebar">
                 <ol>
                     <li>创建任务</li>
@@ -41,7 +74,7 @@
                     
                     <input type="file" id="fileInput" multiple>
                     
-                    <button id="uploadButton">开始上传</button>
+                    <button id="uploadButton" onclick="showProgressBar()">开始上传</button>
                 </div>
             </div>
             <div class="upload_file-list">
@@ -51,7 +84,39 @@
         </div>
         </div>
 
-        
+
+        <script>
+            function showProgressBar() {
+                const progressBarContainer = document.getElementById('progressBarContainer');
+                const progressBarFill = document.getElementById('progressBarFill');
+                progressBarContainer.style.display = 'block';
+                let width = 0;
+                const interval = setInterval(() => {
+                    if (width >= 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            progressBarContainer.style.display = 'none';
+                            progressBarFill.style.width = '0';
+                            progressBarFill.innerHTML = '0%';
+                        }, 1000);
+                    } else {
+                        width++;
+                        progressBarFill.style.width = width + '%';
+                        progressBarFill.innerHTML = width + '%';
+                    }
+                }, 50);
+            }
+        </script>
+
+        <div class="progress-bar-container" id="progressBarContainer">
+            <h3>正在执行操作...</h3>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progressBarFill">0%</div>
+            </div>
+        </div>
+
+
+
     </div>
     <p>
         <div class = "col-md-12">
