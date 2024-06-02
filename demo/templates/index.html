@@ -1,0 +1,223 @@
+{% extends "base.html" %} {% block mainbody %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+
+            <!--overview start-->
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="page-header"> 欢迎回来，亲爱的管理员 </h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a href="\">Home</a></li>
+                        <li><i class="fa fa-search"></i>操作日志</li>
+                    </ol>
+                </div>
+            </div>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    background-color: #f5f5f5;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }
+                .container {
+                    display: flex;
+                    width: 100%;
+                    background: #fff;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+                .main {
+                    width: 100%;
+                    padding: 20px;
+                    border-right: 1px solid #ddd;
+                }
+                .log {
+                    width: 100%;
+                    padding: 20px;
+                }
+                .sidebar {
+                    width: 25%;
+                    padding: 20px;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f5f5f5;
+                }
+                .button {
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    text-decoration: none;
+                    color: #fff;
+                    background-color: #007bff;
+                    display: inline-block;
+                }
+                .button:hover {
+                    background-color: #0056b3;
+                }
+                .low-risk {
+                    color: #007bff;
+                }
+                .success {
+                    color: #28a745;
+                }
+                .sidebar .quick-actions {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+                .sidebar .quick-actions div {
+                    width: 50%;
+                    padding: 10px;
+                    box-sizing: border-box;
+                    text-align: center;
+                }
+                .sidebar .quick-actions div a {
+                    display: block;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    text-decoration: none;
+                    color: #333;
+                }
+                .sidebar .quick-actions div a:hover {
+                    background-color: #f5f5f5;
+                }
+            </style>
+            <div class="main" style="display: flex; flex-direction: row;">
+                
+                <div class="log" style="transform: translate(0, -10%);">
+                    <h2>操作日志</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>操作模块</th>
+                                <th>风险等级</th>
+                                <th>执行结果</th>
+                                <th>操作日志</th>
+                                <th>留痕地址</th>
+                                <th>操作时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>身份认证 / 登录系统</td>
+                                <td class="low-risk">低风险</td>
+                                <td class="success">成功</td>
+                                <td><a href="#" class="button">登录系统</a></td>
+                                <td>中国-天津-天津市 (60.29.153.20)</td>
+                                <td>2024-06-02 19:34:37</td>
+                            </tr>
+                            <tr>
+                                <td>身份认证 / 登出系统</td>
+                                <td class="low-risk">低风险</td>
+                                <td class="success">成功</td>
+                                <td><a href="#" class="button">登出系统</a></td>
+                                <td>中国-天津-天津市 (60.29.153.20)</td>
+                                <td>2024-06-02 19:34:27</td>
+                            </tr>
+                            <tr>
+                                <td>身份认证 / 登录系统</td>
+                                <td class="low-risk">低风险</td>
+                                <td class="success">成功</td>
+                                <td><a href="#" class="button">登录系统</a></td>
+                                <td>中国-广东省-广州市 (117.136.32.50)</td>
+                                <td>2024-06-02 19:04:10</td>
+                            </tr>
+                            <tr>
+                                <td>身份认证 / 登录系统</td>
+                                <td class="low-risk">低风险</td>
+                                <td class="success">成功</td>
+                                <td><a href="#" class="button">登录系统</a></td>
+                                <td>中国-云南省-红河州 (119.62.167.124)</td>
+                                <td>2024-06-02 17:49:12</td>
+                            </tr>
+                            <tr>
+                                <td>主机终端 / 连接主机终端</td>
+                                <td class="low-risk">低风险</td>
+                                <td class="success">成功</td>
+                                <td><a href="#" class="button">连接主机 SSH 应用-分析01</a></td>
+                                <td>中国-北京市-北京市 (60.247.46.230)</td>
+                                <td>2024-06-02 17:28:55</td>
+                            </tr>
+                            <tr>
+                                <td>身份认证 / 登录系统</td>
+                                <td class="low-risk">低风险</td>
+                                <td class="success">成功</td>
+                                <td><a href="#" class="button">登录系统</a></td>
+                                <td>中国-北京市-北京市 (60.247.46.230)</td>
+                                <td>2024-06-02 17:08:56</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sidebar" style="transform: translate(0, -45%);">
+                    <h3>快捷操作</h3>
+                    <div class="quick-actions">
+                        <div><a href="#">命令执行</a></div>
+                        <div><a href="#">执行日志</a></div>
+                        <div><a href="#">批量上传</a></div>
+                        <div><a href="#">上传任务</a></div>
+                        <div><a href="#">任务列表</a></div>
+                        <div><a href="#">任务日志</a></div>
+                    </div>
+                </div>
+    
+            </div>
+
+
+            <!--collapse start-->
+            <div class="panel-group m-bot20" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    [查看识别结果]
+                        </a>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            {% autoescape off %}
+                            <h5>{{ rlt }}</h5>
+                            {% endautoescape %}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                    [查看分词结果]
+                            </a>
+
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            {% autoescape off %}
+                            <h5> {{ seg_word }}</h5>
+                            {% endautoescape %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--collapse end-->
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
