@@ -37,7 +37,7 @@ class word_vector_model :
 			for line in f.readlines():
 				count += 1
 				if count % 10000 == 9999:
-					print('loading word vector (' + str(count+1) + ') ......')
+					print(' (' + str(count+1) + ') ......')
 				line = line.split(" ")
 				curList = []
 				for i in range(1,len(line)):

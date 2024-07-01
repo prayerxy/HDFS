@@ -243,6 +243,13 @@
         }
 
         function showGraph() {
+
+            const timeDisplay = document.getElementById('time_show');
+            // 获取当前时间
+            const currentTime = new Date().toLocaleString();
+            // 将时间显示在指定元素中
+            timeDisplay.textContent = currentTime;
+
             // 修改按钮文本
             document.getElementById('startexe').innerText = `再次执行 (选项 ${selectedOption})`;
 
@@ -391,7 +398,7 @@
                 <td>ps -ef | grep "java"</td>
                 <td>admin</td>
                 <td><span class="status-completed">上传完成</span></td>
-                <td>2024-06-01 16:39:50<br>持续时间: 10s</td>
+                <td id="time_show">2024-06-01 16:39:50<br>持续时间: 10s</td>
                 <td>
                     <button  class="action-link" id="startexe" onclick="showGraph()">开始执行</button>
                     <a href="#" class="action-link">命令</a>
