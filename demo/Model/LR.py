@@ -1,16 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-The implementation of the logistic regression model for anomaly detection.
-
-Authors: 
-    LogPAI Team
-
-Reference: 
-    [1] Peter Bodík, Moises Goldszmidt, Armando Fox, Hans Andersen. Fingerprinting 
-        the Datacenter: Automated Classification of Performance Crises. The European 
-        Conference on Computer Systems (EuroSys), 2010.
-
-"""
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
