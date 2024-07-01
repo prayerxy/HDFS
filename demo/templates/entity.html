@@ -72,9 +72,10 @@
                     <label for="uploadHost">上传主机</label>
                     <button id="selectHost">选择主机</button>
                     
-                    <input type="file" id="fileInput" multiple>
+<!-- {#                    <input type="file" id="fileInput" multiple>#} -->
+                    <input type="file" id="fileInput" accept=".txt,.csv">
                     
-                    <button id="uploadButton" onclick="showProgressBar()">开始上传</button>
+                    <button id="uploadButton" onclick="handleUpload()">开始上传</button>
                 </div>
             </div>
             <div class="upload_file-list">
@@ -83,30 +84,131 @@
             </div>
         </div>
         </div>
-
-
         <script>
-            function showProgressBar() {
-                const progressBarContainer = document.getElementById('progressBarContainer');
-                const progressBarFill = document.getElementById('progressBarFill');
-                progressBarContainer.style.display = 'block';
-                let width = 0;
-                const interval = setInterval(() => {
-                    if (width >= 100) {
-                        clearInterval(interval);
-                        setTimeout(() => {
-                            progressBarContainer.style.display = 'none';
-                            progressBarFill.style.width = '0';
-                            progressBarFill.innerHTML = '0%';
-                        }, 1000);
-                    } else {
-                        width++;
-                        progressBarFill.style.width = width + '%';
-                        progressBarFill.innerHTML = width + '%';
+            function showProgressBar(){
+                    const progressBarContainer = document.getElementById('progressBarContainer');
+                    const progressBarFill = document.getElementById('progressBarFill');
+                    progressBarContainer.style.display = 'block';
+                    let width = 0;
+                    const interval = setInterval(() => {
+                        if (width >= 100) {
+                            clearInterval(interval);
+                            setTimeout(() => {
+                                progressBarContainer.style.display = 'none';
+                                progressBarFill.style.width = '0';
+                                progressBarFill.innerHTML = '0%';
+                            }, 1000);
+                        } else {
+                            width++;
+                            progressBarFill.style.width = width + '%';
+                            progressBarFill.innerHTML = width + '%';
+                        }
+                    }, 50);
+            }
+
+            // function uploadFile() {
+            //     const fileInput = document.getElementById('fileInput');
+            //     const uploadDescription = document.getElementById('uploadDescription').value;
+            //     const uploadPath = document.getElementById('uploadPath').value;
+
+            //     if (fileInput.files.length === 0) {
+            //         alert("请选择一个文件");
+            //         return;
+            //     }
+
+            //     const file = fileInput.files[0];
+            //     const reader = new FileReader();
+
+            //     reader.onload = function(event) {
+            //         const fileContent = event.target.result;
+
+            //         const data = {
+            //             description: uploadDescription,
+            //             path: uploadPath,
+            //             content: fileContent
+            //         };
+
+            //         fetch('/upload', {
+            //             method: 'POST',
+            //             headers: {
+            //                 'Content-Type': 'application/json'
+            //             },
+            //             body: JSON.stringify(data)
+            //         })
+            //         .then(response => response.json())
+            //         .then(data => {
+            //             console.log('成功:', data);
+            //             alert("上传成功");
+            //         })
+            //         .catch((error) => {
+            //             console.error('错误:', error);
+            //             alert("上传失败");
+            //         });
+            //     };
+
+            //     reader.readAsText(file);
+            // }
+            // 获取CSRF令牌的函数
+            function getCSRFToken() {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith('csrftoken=')) {
+                        return cookie.substring('csrftoken='.length, cookie.length);
                     }
-                }, 50);
+                }
+                return null;
+            }
+            function uploadFile() {
+                const fileInput = document.getElementById('fileInput');
+                const uploadDescription = document.getElementById('uploadDescription').value;
+                const uploadPath = document.getElementById('uploadPath').value;
+
+                if (fileInput.files.length === 0) {
+                    alert("请选择一个文件");
+                    return;
+                }
+
+                const file = fileInput.files[0];
+                const formData = new FormData();
+                console.log(file);
+                formData.append('file', file);
+                formData.append('description', uploadDescription);
+                formData.append('path', uploadPath);
+
+                const csrfToken = getCSRFToken('csrftoken'); // 替换成你的CSRF令牌获取方式
+
+                fetch('/upload', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken // 在请求头部添加CSRF令牌
+                    },
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('成功:', data);
+                    alert("上传成功");
+                })
+                .catch(error => {
+                    console.error('错误:', error);
+                    alert("上传失败");
+                });
+            }
+
+
+
+            function handleUpload() {
+                showProgressBar();
+                uploadFile();
             }
         </script>
+
 
         <div class="progress-bar-container" id="progressBarContainer">
             <h3>正在执行操作...</h3>

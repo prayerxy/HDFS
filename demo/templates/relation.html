@@ -377,7 +377,7 @@
             document.getElementById('chartContainer').style.display = 'none';
         }
 	</script>
-    <table>
+    <!-- <table>
         <thead>
             <tr>
                 <th><input type="checkbox"></th>
@@ -408,6 +408,43 @@
                 </td>
             </tr>
         </tbody>
+    </table> -->
+    <table>
+        <thead>
+            <tr>
+                <th><input type="checkbox"></th>
+                <th>id</th>
+                <!-- <th>执行描述</th> -->
+                <!-- <th>执行命令</th> -->
+                <th>文件命名</th>
+                <th>执行用户</th>
+                <th>执行状态</th>
+                <th>上传时间</th>
+                <th>文件大小</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>{{ row.id }}</td>
+                <!-- <td>{{ row.description }}</td> -->
+                <td>{{row.filename}}</td>
+                <td>admin</td>
+                <td><span class="status-completed">上传完成</span></td>
+                <td>{{ row.upload_date }}</td>
+                <td>{{ row.file_size }} KB</td>
+                <td>
+                    <button class="action-link" id="startexe" onclick="showGraph()">开始执行</button>
+                    <a href="#" class="action-link">命令</a>
+                    <a href="#" class="action-link">日志</a>
+                    <a href="#" class="action-link">中断</a>
+                    <a href="#" class="action-link delete">删除</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 	<div class="chart-container" id="chartContainer">
         <div class="close-btn">
@@ -417,7 +454,7 @@
     </div>
 	</div>
 	
-	{% if ctx %}
+	<!-- {% if ctx %}
 	<div class = "col-md-12">
 		<div class = "panel panel-default">
 			<header class = "panel-heading">
@@ -430,36 +467,12 @@
 			</div>
 		</div>
 	</div>
-	{% endif %}
+	{% endif %} -->
 
-    {% if searchResult %}
-
-    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <div class = "col-md-12">
-        <div class="panel panel-default ">
-	        <header class="panel-heading">
-	            关系图 :
-	        </header>
-            <div class = "panel-body ">
-                <div id="graph" style="width: 100%;height:600px;"></div>
-            </div>
-        </div>
-    </div>
-    <!-- Footable -->
-    <div class = "col-md-12">
-	    <div class="panel panel-default">
-	    	<header class="panel-heading">
-	       	 关系列表 :
-	   		</header>
-	        <div class = "panel-body">
-	            <table class = "table" data-paging =  "true" data-sorting="true"></table>
-	        </div>
-	    </div>
-	</div>
-    {% endif %}
+    
 
 </div>
-<script src="/static/js/jquery-1.8.3.min.js"></script>
+<!-- <script src="/static/js/jquery-1.8.3.min.js"></script>
 {% if searchResult %}
 <script type="text/javascript">
 	var searchResult = {{searchResult|safe}}
@@ -654,8 +667,8 @@
 
 </script>
 
-{% endif %}
-<script>
+{% endif %} -->
+<!-- <script>
 
 	$(".dropdown-menu li a").click(function(){
 	   var selText = $(this).text();
@@ -677,5 +690,5 @@
 	// $("#btnSearch").click(function(){
 	// 	alert($('.btn-select').text()+", "+$('.btn-select2').text());
 	// });
-</script>
+</script> -->
 {% endblock %}
