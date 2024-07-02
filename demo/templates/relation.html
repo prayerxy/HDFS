@@ -111,6 +111,8 @@
 		function selectOption(option) {
 			selectedOption = option;
 			document.getElementById('startexe').innerText = `开始执行`;
+            var algorithmNames = ["PCA", "Clustering", "Decision Tree", "Random Forest", "SVM", "Transformer", "BERT", "LSTM"];
+            document.getElementById('btnCountry').innerText = algorithmNames[option - 1] + ' ';
 		}
 
 		function randomClusterCenter() {
@@ -178,6 +180,9 @@
         function selectOption(option) {
             selectedOption = option;
             document.getElementById('startexe').innerText = `开始执行`;
+            var algorithmNames = ["PCA", "Clustering", "Decision Tree", "Random Forest", "SVM", "Transformer", "BERT", "LSTM"];
+            document.getElementById('btnCountry').innerText = algorithmNames[option - 1] + ' ';
+    
         }
 
         function randomClusterCenter() {
@@ -242,13 +247,32 @@
             return { data, outliers };
         }
 
-        function showGraph() {
-
-            const timeDisplay = document.getElementById('time_show');
-            // 获取当前时间
-            const currentTime = new Date().toLocaleString();
-            // 将时间显示在指定元素中
-            timeDisplay.textContent = currentTime;
+        function showGraph(fileid) {
+            const url = '/api/data_analysis/';
+            const test_data = {
+                option: selectedOption,
+                fileid: fileid,
+            };
+            console.log('Success:')
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(test_data)
+            })
+            .then(response => response.json())
+            .then(test_data => {
+                console.log('Success:', test_data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            // const timeDisplay = document.getElementById('time_show');
+            // // 获取当前时间
+            // const currentTime = new Date().toLocaleString();
+            // // 将时间显示在指定元素中
+            // timeDisplay.textContent = currentTime;
 
             // 修改按钮文本
             document.getElementById('startexe').innerText = `再次执行 (选项 ${selectedOption})`;
@@ -421,6 +445,7 @@
                 <th>执行状态</th>
                 <th>上传时间</th>
                 <th>文件大小</th>
+                <th>文件描述</th>
                 <th>操作</th>
             </tr>
         </thead>
@@ -435,8 +460,9 @@
                 <td><span class="status-completed">上传完成</span></td>
                 <td>{{ row.upload_date }}</td>
                 <td>{{ row.file_size }} KB</td>
+                <td>{{row.file_description}}</td>
                 <td>
-                    <button class="action-link" id="startexe" onclick="showGraph()">开始执行</button>
+                    <button class="action-link" id="startexe" onclick="showGraph('{{ row.id }}')">开始执行</button>
                     <a href="#" class="action-link">命令</a>
                     <a href="#" class="action-link">日志</a>
                     <a href="#" class="action-link">中断</a>

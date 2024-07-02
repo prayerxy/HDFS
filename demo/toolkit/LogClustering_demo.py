@@ -20,8 +20,8 @@ from sklearn.manifold import TSNE
 from LogClustering import LogClustering
 import dataloader, preprocessing
 
-struct_log = '../data/HDFS/HDFS_100k.log_structured.csv'  # The structured log file
-label_file = '../data/HDFS/anomaly_label.csv'  # The anomaly label file
+struct_log = 'demo/data/HDFS/HDFS_100k.log_structured.csv'  # The structured log file
+label_file = 'demo/data/HDFS/anomaly_label.csv'  # The anomaly label file
 max_dist = 0.3  # the threshold to stop the clustering process
 anomaly_threshold = 0.3  # the threshold for anomaly detection
 max_samples = 1000  # maximum number of samples to plot
