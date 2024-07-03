@@ -7,6 +7,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 {#    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>#}
 <style>
         .chart-container {
@@ -102,7 +103,9 @@
     <button class="execute-command">⚡ 执行命令</button>
     <button class="clear-command">✖ 清空</button>
     <button class="delete-command">🗑 删除</button>
-
+    <div id="scatter-plot"></div>
+    <div id="scatter-plot-pca" ></div>
+    <div id="scatter-plot-tsne"></div>
 	<script>
  
  		let selectedOption = 0;
@@ -114,69 +117,6 @@
             var algorithmNames = ["PCA", "Clustering", "Decision Tree", "Random Forest", "SVM", "Transformer", "BERT", "LSTM"];
             document.getElementById('btnCountry').innerText = algorithmNames[option - 1] + ' ';
 		}
-
-		function randomClusterCenter() {
-            return {
-                x: Math.random() * 100 - 50,
-                y: Math.random() * 100 - 50,
-                z: Math.random() * 100 - 50
-            };
-        }
-
-        function generateClusterPoints(center, numPoints, spread) {
-            const points = [];
-            for (let i = 0; i < numPoints; i++) {
-                const point = [
-                    center.x + (Math.random() - 0.5) * spread,
-                    center.y + (Math.random() - 0.5) * spread,
-                    center.z + (Math.random() - 0.5) * spread
-                ];
-                points.push(point);
-            }
-            return points;
-        }
-
-        function generateNoisePoints(numPoints) {
-            const points = [];
-            for (let i = 0; i < numPoints; i++) {
-                const point = [
-                    Math.random() * 100 - 50,
-                    Math.random() * 100 - 50,
-                    Math.random() * 100 - 50
-                ];
-                points.push(point);
-            }
-            return points;
-        }
-
-        // 生成聚类数据
-        function generateClusterData(numClusters, pointsPerCluster, clusterSpread, noiseLevel) {
-            data = [];
-            outliers = [];
-
-            for (let i = 0; i < numClusters; i++) {
-                const center = randomClusterCenter();
-                const clusterPoints = generateClusterPoints(center, pointsPerCluster, clusterSpread);
-                data.push(...clusterPoints);
-            }
-
-            const noisePoints = generateNoisePoints(pointsPerCluster * numClusters * noiseLevel);
-            data.push(...noisePoints);
-
-            // 生成离群点
-            const numOutliers = 3; // 设定离群点数量
-            for (let i = 0; i < numOutliers; i++) {
-                const outlier = [
-                    Math.random() * 200 - 100,
-                    Math.random() * 200 - 100,
-                    Math.random() * 200 - 100
-                ];
-                outliers.push(outlier);
-            }
-
-            return { data, outliers };
-        }
-
         function selectOption(option) {
             selectedOption = option;
             document.getElementById('startexe').innerText = `开始执行`;
@@ -185,66 +125,59 @@
     
         }
 
-        function randomClusterCenter() {
-            return {
-                x: Math.random() * 100 - 50,
-                y: Math.random() * 100 - 50,
-                z: Math.random() * 100 - 50
+
+        function deleteFile(fileld){
+            const url = '/api/delete_file/';
+            const test_data = {
+                fileid: fileld,
             };
+            console.log('Success:')
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(test_data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:');
+                console.log(data);
+                alert('File deleted successfully!'); // Show alert on successful deletion
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
         }
+        function showContent(fileid) {
+            const url = '/api/show_content/';
+            const test_data = {
+                fileid: fileid,
+            };
+            console.log('Success:')
 
-        function generateClusterPoints(center, numPoints, spread) {
-            const points = [];
-            for (let i = 0; i < numPoints; i++) {
-                const point = [
-                    center.x + (Math.random() - 0.5) * spread,
-                    center.y + (Math.random() - 0.5) * spread,
-                    center.z + (Math.random() - 0.5) * spread
-                ];
-                points.push(point);
-            }
-            return points;
-        }
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(test_data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:');
+                console.log(data);
+                 //显示前100个字符
+                 alert("文件内容概览(前100个字符): " + data['content']+ '...');
+               
+                
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
 
-        function generateNoisePoints(numPoints) {
-            const points = [];
-            for (let i = 0; i < numPoints; i++) {
-                const point = [
-                    Math.random() * 100 - 50,
-                    Math.random() * 100 - 50,
-                    Math.random() * 100 - 50
-                ];
-                points.push(point);
-            }
-            return points;
-        }
-
-        // 生成聚类数据
-        function generateClusterData(numClusters, pointsPerCluster, clusterSpread, noiseLevel) {
-            const data = [];
-            const outliers = [];
-
-            for (let i = 0; i < numClusters; i++) {
-                const center = randomClusterCenter();
-                const clusterPoints = generateClusterPoints(center, pointsPerCluster, clusterSpread);
-                data.push(...clusterPoints);
-            }
-
-            const noisePoints = generateNoisePoints(pointsPerCluster * numClusters * noiseLevel);
-            data.push(...noisePoints);
-
-            // 生成离群点
-            const numOutliers = 3; // 设定离群点数量
-            for (let i = 0; i < numOutliers; i++) {
-                const outlier = [
-                    Math.random() * 200 - 100,
-                    Math.random() * 200 - 100,
-                    Math.random() * 200 - 100
-                ];
-                outliers.push(outlier);
-            }
-
-            return { data, outliers };
         }
 
         function showGraph(fileid) {
@@ -262,8 +195,130 @@
                 body: JSON.stringify(test_data)
             })
             .then(response => response.json())
-            .then(test_data => {
-                console.log('Success:', test_data);
+            .then(data => {
+                const mydata=data
+                console.log('Success:');
+                // x_test = data['x_test'];
+                // //输出一小部分数据
+                // console.log(x_test.slice(0, 5));
+                // y_pred = data['y_pred'];
+                //尝试获取spe_threshold
+                // try{
+                //     spe_threshold = data['spe_threshold'];
+                //     console.log(spe_threshold);
+                // }
+                // catch(err){
+                //     console.log('no spe_threshold');
+                // }
+               
+                document.getElementById('startexe').innerText = `再次执行 (选项 ${selectedOption})`;
+
+                // 显示图表容器
+                // const chartContainer = document.getElementById('chartContainer');
+                // chartContainer.style.display = 'block';
+
+                // 销毁之前的图表实例
+                // if (chart !== null) {
+                //     chart.dispose();
+                // }
+
+                // 初始化ECharts实例
+                // chart = echarts.init(document.getElementById('chart'));
+                if (selectedOption === 1) {
+                    x_test = mydata['x_test'];
+                    y_pred = mydata['y_pred'];
+                    const spe_threshold = mydata['spe_threshold'];
+                    console.log(spe_threshold);
+                   // 分离正常点和异常点
+                    const normalPoints = x_test.filter((_, i) => y_pred[i] === 0);
+                    const anomalyPoints = x_test.filter((_, i) => y_pred[i] === 1);
+
+                    // 创建Plotly的数据格式
+                    const normalTrace = {
+                        x: normalPoints.map(point => point[0]),
+                        y: normalPoints.map(point => point[1]),
+                        mode: 'markers',
+                        type: 'scatter',
+                        name: 'Normal',
+                        marker: { color: 'green', opacity: 0.5 }
+                    };
+
+                    const anomalyTrace = {
+                        x: anomalyPoints.map(point => point[0]),
+                        y: anomalyPoints.map(point => point[1]),
+                        mode: 'markers',
+                        type: 'scatter',
+                        name: 'Anomaly',
+                        marker: { color: 'red', opacity: 0.5 }
+                    };
+
+                    const data = [normalTrace, anomalyTrace];
+
+                    const layout = {
+                        title: 'PCA Scatter Plot',
+                        xaxis: { title: 'Principal Component 1' },
+                        yaxis: { title: 'Principal Component 2' },
+                        annotations: [
+                            {
+                                xref: 'paper',
+                                yref: 'paper',
+                                x: 0.5,
+                                y: -0.2,
+                                xanchor: 'center',
+                                yanchor: 'top',
+                                text: `SPE Threshold: ${spe_threshold}`,
+                                showarrow: false,
+                                font: {
+                                    size: 12,
+                                    color: 'black'
+                                }
+                            }
+                        ]
+                    };
+
+                    // 绘制图表
+                    Plotly.newPlot('scatter-plot', data, layout);
+                }
+
+                else if (selectedOption === 2) {
+                    const x_pca = mydata['x_pca'];
+                    const x_tsne = mydata['x_tsne'];
+                    const y_pred = mydata['y_pred'];
+
+                    // 3D 散点图绘制函数
+                    function plot3DScatter(id, title, X, y_pred) {
+                        const data = [{
+                            x: X.map(point => point[0]),
+                            y: X.map(point => point[1]),
+                            z: X.map(point => point[2]),
+                            mode: 'markers',
+                            marker: {
+                                size: 3,
+                                color: y_pred,
+                                colorscale: 'Viridis',
+                                opacity: 0.8
+                            },
+                            type: 'scatter3d'
+                        }];
+
+                        const layout = {
+                            title: title,
+                            scene: {
+                                xaxis: {title: 'Dim1'},
+                                yaxis: {title: 'Dim2'},
+                                zaxis: {title: 'Dim3'}
+                            }
+                        };
+
+                        Plotly.newPlot(id, data, layout);
+                    }
+
+                    // 绘制 PCA 3D 散点图
+                    plot3DScatter('scatter-plot-pca', 'PCA', x_pca, y_pred);
+
+                    // 绘制 t-SNE 3D 散点图
+                    plot3DScatter('scatter-plot-tsne', 't-SNE', x_tsne, y_pred);
+                }
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -275,126 +330,8 @@
             // timeDisplay.textContent = currentTime;
 
             // 修改按钮文本
-            document.getElementById('startexe').innerText = `再次执行 (选项 ${selectedOption})`;
-
-            // 显示图表容器
-            const chartContainer = document.getElementById('chartContainer');
-            chartContainer.style.display = 'block';
-
-            // 销毁之前的图表实例
-            if (chart !== null) {
-                chart.dispose();
-            }
-
-            // 初始化ECharts实例
-            chart = echarts.init(document.getElementById('chart'));
-
-            if (selectedOption === 1) {
-                // 生成正态分布随机数
-                function randomNormal(mean, std) {
-                    var u = 0, v = 0;
-                    while (u === 0) u = Math.random();
-                    while (v === 0) v = Math.random();
-                    return mean + std * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-                }
-
-                // 生成随机散点数据
-                var a = 20; // 常数a
-                var data = [];
-                for (var i = 0; i < 200; i++) {
-                    var x = randomNormal(a / 2, a / 6); // 正态分布随机生成x
-                    x = Math.max(0, Math.min(a, x)); // 确保x在[0, a]范围内
-                    var y = a - x + randomNormal(0, a / 10); // 增加随机性
-                    y = Math.max(0, y); // 确保y在第一象限
-                    data.push([x, y]);
-                }
-
-                // 确定离群点（这里简单处理：超过一定范围的点为离群点）
-                var outliers = data.filter(point => point[0] < 2 || point[0] > a - 2 || point[1] < 2 || point[1] > a - 2);
-                var inliers = data.filter(point => !outliers.includes(point));
-
-                // 指定图表的配置项和数据
-                var option = {
-                    title: {
-                        text: 'Scatter Plot on y = a - x Line',
-                        left: 'center'
-                    },
-                    tooltip: {
-                        trigger: 'item'
-                    },
-                    xAxis: {
-                        type: 'value'
-                    },
-                    yAxis: {
-                        type: 'value'
-                    },
-                    series: [
-                        {
-                            name: 'Inliers',
-                            type: 'scatter',
-                            data: inliers,
-                            itemStyle: {
-                                color: 'green'
-                            }
-                        },
-
-                    ]
-                };
-
-                // 使用刚指定的配置项和数据显示图表
-                chart.setOption(option);
-            } else if (selectedOption === 2) {
-                // 生成模拟数据
-                const numClusters = 1;
-                const pointsPerCluster = 40;
-                const clusterSpread = 2;
-                const noiseLevel = 0.7;
-                const { data, outliers } = generateClusterData(numClusters, pointsPerCluster, clusterSpread, noiseLevel);
-
-                // 指定图表的配置项和数据
-                var option = {
-                    title: {
-                        text: 'Test Data - t-SNE'
-                    },
-                    xAxis3D: {
-                        type: 'value'
-                    },
-                    yAxis3D: {
-                        type: 'value'
-                    },
-                    zAxis3D: {
-                        type: 'value'
-                    },
-                    grid3D: {
-                        viewControl: {
-                            // 3D视图控制
-                            projection: 'orthographic'
-                        }
-                    },
-                    series: [
-                        {
-                            type: 'scatter3D',
-                            data: data,
-                            symbolSize: 10,
-                            itemStyle: {
-                                opacity: 0.8
-                            }
-                        },
-                        {
-                            type: 'scatter3D',
-                            data: outliers,
-                            symbolSize: 10,
-                            itemStyle: {
-                                color: 'red',
-                                opacity: 0.8
-                            }
-                        }
-                    ]
-                };
-
-                // 使用刚指定的配置项和数据显示图表
-                chart.setOption(option);
-            }
+           
+            
         }
 
         function closeChart() {
@@ -464,9 +401,9 @@
                 <td>
                     <button class="action-link" id="startexe" onclick="showGraph('{{ row.id }}')">开始执行</button>
                     <a href="#" class="action-link">命令</a>
-                    <a href="#" class="action-link">日志</a>
+                    <button class="action-link" id="startexe" onclick="showContent('{{ row.id }}')">内容概览</button>
                     <a href="#" class="action-link">中断</a>
-                    <a href="#" class="action-link delete">删除</a>
+                    <button class="action-link" id="startexe" onclick="deleteFile('{{ row.id }}')">删除</button>
                 </td>
             </tr>
             {% endfor %}

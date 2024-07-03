@@ -16,6 +16,8 @@ urlpatterns = [
     # re_path(r'^tagging$', tagging.tagging),
     re_path(r'^search_relation$', relation_view.search_relation),
     re_path(r'api/data_analysis', relation_view.data_analysis),
+    re_path(r'api/delete_file', relation_view.delete_file),
+    re_path(r'api/show_content', relation_view.show_content),
     # re_path(r'^qa$', question_answering.question_answering),
     # re_path(r'^decision$', decisions_making.decisions_making),
     re_path(r'^upload$', index_view.upload_file)
